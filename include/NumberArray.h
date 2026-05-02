@@ -4,12 +4,13 @@
 #include <limits>
 #include <cstddef>
 
+template<typename T>
 class NumberArray {
   /// size of the array in terms of total number of double elements
   size_t size_m;
 
   /// the dynamically allocated array of size size_m of doubles
-  double *data_m;
+  T *data_m;
 public:
   /// An extrememly unlikely to be used value; it might be better to use a 
   /// flag, but this will work just as well %99.99... of the time.
@@ -22,8 +23,8 @@ public:
   ///  array you want allocated in terms of the number of elements.
   ///  
   /// Instantiates a NumberArray class, which allows dynamic allocation of an
-  /// array of doubles. The size argument indicates the number of doubles you
-  /// want to be able to fit in the array maximally.  
+  /// array of type T. The size argument indicates the number of type T
+  /// elements you want to be able to fit in the array maximally.  
   NumberArray(size_t size = DEFAULT_SIZE);
 
   NumberArray(const NumberArray& other);
@@ -44,23 +45,23 @@ public:
   ///
   /// The index given must be valid relative to the total size of the array.
   /// Assigns the element at index to value.
-  void setNumber(size_t index, double value);
+  void setNumber(size_t index, T value);
 
   /// - size_t index
   ///
   /// The index given must be valid relative to the total size of the array.
-  /// Returns the double value present in the array at the given index.
-  double getNumber(size_t index) const;
+  /// Returns the type T value present in the array at the given index.
+  T getNumber(size_t index) const;
 
   /// Returns the smallest number in the array.
-  double getMin() const;
+  T getMin() const;
 
   /// Returns the largest number in the array.
-  double getMax() const;
+  T getMax() const;
 
-  /// Returns a double value that is the average across all elements of the
+  /// Returns a type T value that is the average across all elements of the
   /// array.
-  double getAverage() const;
+  T getAverage() const;
 
   /// Prints out all the values in the array.
   void print() const;

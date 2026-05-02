@@ -2,23 +2,27 @@
 #include <iostream>
 #include <cstddef>
 
-NumberArray::NumberArray(size_t size) 
+
+template<typename T>
+NumberArray<T>::NumberArray(size_t size) 
 {
   // allocate array and initialize all elements to zero
-  data_m = new double[size] {};   
+  data_m = new T[size] {};   
   size_m = size;
 }
 
 
-NumberArray::NumberArray(const NumberArray& other)
+template<typename T>
+NumberArray<T>::NumberArray(const NumberArray& other)
   // set size and alloc zeroed array
-  : size_m(other.size_m), data_m(new double[other.size_m] {})
+  : size_m(other.size_m), data_m(new T[other.size_m] {})
 {
   for (int i {}; i < size_m; ++i)
     data_m[i] = other.data_m[i];
 }
 
-NumberArray& NumberArray::operator=(const NumberArray& other) 
+template<typename T>
+NumberArray<T>& NumberArray<T>::operator=(const NumberArray& other) 
 {
   // self assignment check
   if (this == &other) 
@@ -27,7 +31,7 @@ NumberArray& NumberArray::operator=(const NumberArray& other)
   size_m = other.size_m;
 
   delete [] data_m;
-  data_m = new double[other.size_m] {};
+  data_m = new T[other.size_m] {};
 
   for (int i {}; i < size_m; ++i)
     data_m[i] = other.data_m[i];  
@@ -35,19 +39,22 @@ NumberArray& NumberArray::operator=(const NumberArray& other)
   return *this;
 }
 
-NumberArray::~NumberArray() 
+template<typename T>
+NumberArray<T>::~NumberArray() 
 {
   // de-alloc the array
   delete [] data_m;  
   std::cout << "Deallocated data array" << std::endl;
 }
 
-size_t NumberArray::size() const 
+template<typename T>
+size_t NumberArray<T>::size() const 
 {
   return size_m;
 }
 
-void NumberArray::setNumber(size_t index, double value) 
+template<typename T>
+void NumberArray<T>::setNumber(size_t index, T value) 
 {
   // index validity check
   if (index >= size_m || index < 0) 
@@ -58,7 +65,8 @@ void NumberArray::setNumber(size_t index, double value)
   data_m[index] = value;
 }
 
-double NumberArray::getNumber(size_t index) const 
+template<typename T>
+T NumberArray<T>::getNumber(size_t index) const 
 {
   // index validity check
   if (index >= size_m || index < 0) 
@@ -69,10 +77,11 @@ double NumberArray::getNumber(size_t index) const
   return data_m[index];
 }
 
-double NumberArray::getMin() const 
+template<typename T>
+T NumberArray<T>::getMin() const 
 {
   // init min to the first element in the array
-  double min { data_m[0] };
+  T min { data_m[0] };
 
   // check for the smallest element in the array
   for (size_t i { 1 }; i < size_m; ++i)
@@ -86,10 +95,11 @@ double NumberArray::getMin() const
   return min;
 }
 
-double NumberArray::getMax() const 
+template<typename T>
+T NumberArray<T>::getMax() const 
 {
   // init max to first element in array
-  double max { data_m[0] };
+  T max { data_m[0] };
 
   // check for largest element in array
   for (size_t i { 1 }; i < size_m; ++i)
@@ -103,10 +113,11 @@ double NumberArray::getMax() const
   return max;
 }
 
-double NumberArray::getAverage() const 
+template<typename T>
+T NumberArray<T>::getAverage() const 
 {
   // might not be big enough for large arrays
-  long double average {};  
+  T average {};  
 
   // sum the array into the average var
   for (size_t i {}; i < size_m; ++i)
@@ -118,7 +129,8 @@ double NumberArray::getAverage() const
   return average /= size_m;  
 }
 
-void NumberArray::print() const 
+template<typename T>
+void NumberArray<T>::print() const 
 {
   // print all the array elements
   for (size_t i {}; i < size_m; ++i)
