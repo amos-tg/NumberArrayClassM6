@@ -49,12 +49,6 @@ NumberArray<T>::~NumberArray()
 }
 
 template<typename T>
-size_t NumberArray<T>::size() const 
-{
-  return size_m;
-}
-
-template<typename T>
 void NumberArray<T>::setNumber(size_t index, T value) 
 {
   // index validity check

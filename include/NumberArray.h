@@ -34,7 +34,8 @@ public:
 
   /// returns the size of the array, the total number of double elements the
   /// array has space for.
-  size_t size() const; 
+  inline size_t size() const
+  { return size_m; }
 
   /// - size_t index : the index of the array which is assigned value.
   /// - double value : the value which is assigned to the given index of the
