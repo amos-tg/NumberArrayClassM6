@@ -22,8 +22,10 @@ public:
   /// elements you want to be able to fit in the array maximally.  
   NumberArray(size_t size = DEFAULT_SIZE);
 
+  /// copy constructor
   NumberArray(const NumberArray& other);
 
+  /// copy assignment operator
   NumberArray& operator=(const NumberArray& other);
 
   /// Deallocates the dynamically allocated double array, and prints a message
