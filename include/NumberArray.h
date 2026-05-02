@@ -1,7 +1,6 @@
 #ifndef NUMBER_ARRAY_H
 #define NUMBER_ARRAY_H
 
-#include <limits>
 #include <cstddef>
 
 template<typename T>
@@ -12,10 +11,6 @@ class NumberArray {
   /// the dynamically allocated array of size size_m of doubles
   T *data_m;
 public:
-  /// An extrememly unlikely to be used value; it might be better to use a 
-  /// flag, but this will work just as well %99.99... of the time.
-  static constexpr double INVALID = std::numeric_limits<double>::denorm_min();
-
   /// Default array size when the constructor is not passed a specific size.
   static const size_t DEFAULT_SIZE = 128;
 

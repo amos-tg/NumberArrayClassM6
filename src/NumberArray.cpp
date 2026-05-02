@@ -1,7 +1,8 @@
 #include "NumberArray.h"
 #include <iostream>
 #include <cstddef>
-
+#include <stdexcept>
+#include <format>
 
 template<typename T>
 NumberArray<T>::NumberArray(size_t size) 
@@ -58,9 +59,8 @@ void NumberArray<T>::setNumber(size_t index, T value)
 {
   // index validity check
   if (index >= size_m || index < 0) 
-  {
-    return; 
-  }
+    throw std::out_of_range(
+      std::format("Error; Index: {}, Size: {}", index, size_m)); 
 
   data_m[index] = value;
 }
@@ -70,9 +70,8 @@ T NumberArray<T>::getNumber(size_t index) const
 {
   // index validity check
   if (index >= size_m || index < 0) 
-  {
-    return INVALID;
-  } 
+    throw std::out_of_range(
+      std::format("Error; Index: {}, Size: {}", index, size_m)); 
   
   return data_m[index];
 }
