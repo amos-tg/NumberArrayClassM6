@@ -23,10 +23,10 @@ public:
   NumberArray(size_t size = DEFAULT_SIZE);
 
   /// copy constructor
-  NumberArray(const NumberArray& other);
+  NumberArray(const NumberArray<T>& other);
 
   /// copy assignment operator
-  NumberArray& operator=(const NumberArray& other);
+  NumberArray& operator=(const NumberArray<T>& other);
 
   /// Deallocates the dynamically allocated double array, and prints a message
   /// which indicates that has been done.

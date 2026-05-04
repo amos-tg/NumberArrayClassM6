@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <format>
 
+using namespace std;
+
 template<typename T>
 NumberArray<T>::NumberArray(size_t size) 
 {
@@ -11,7 +13,6 @@ NumberArray<T>::NumberArray(size_t size)
   data_m = new T[size] {};   
   size_m = size;
 }
-
 
 template<typename T>
 NumberArray<T>::NumberArray(const NumberArray& other)
@@ -45,7 +46,7 @@ NumberArray<T>::~NumberArray()
 {
   // de-alloc the array
   delete [] data_m;  
-  std::cout << "Deallocated data array" << std::endl;
+  cout << "Deallocated data array" << endl;
 }
 
 template<typename T>
@@ -53,8 +54,8 @@ void NumberArray<T>::setNumber(size_t index, T value)
 {
   // index validity check
   if (index >= size_m || index < 0) 
-    throw std::out_of_range(
-      std::format("Error; Index: {}, Size: {}", index, size_m)); 
+    throw out_of_range(
+      format("NumberArray::setNumber: Index: {}, Size: {}", index, size_m)); 
 
   data_m[index] = value;
 }
@@ -64,8 +65,8 @@ T NumberArray<T>::getNumber(size_t index) const
 {
   // index validity check
   if (index >= size_m || index < 0) 
-    throw std::out_of_range(
-      std::format("Error; Index: {}, Size: {}", index, size_m)); 
+    throw out_of_range(
+      format("NumberArray::getNumber: Index: {}, Size: {}", index, size_m)); 
   
   return data_m[index];
 }
@@ -128,9 +129,9 @@ void NumberArray<T>::print() const
   // print all the array elements
   for (size_t i {}; i < size_m; ++i)
   {
-    std::cout << data_m[i] << ' ';
+    cout << data_m[i] << ' ';
   }
 
   // flush and print a newline
-  std::cout << std::endl;
+  cout << endl;
 }

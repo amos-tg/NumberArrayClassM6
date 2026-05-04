@@ -3,48 +3,51 @@
 #include <iostream>
 #include <cstddef>
 #include <random>
+#include <stdexcept>
 
 using namespace std;
 
 const char *TEST_PASS = "Passed";
 
-const char *DEFAULT_CONSTRUCTOR_TEST = "Test (NumberArray constructor): "; 
+const char *DEFAULT_CONSTRUCTOR_TEST = "Test (NumberArray<double> constructor): "; 
 const char *PARAM_CONSTRUCTOR_TEST = 
-  "Test (NumberArray Parameterized constructor): ";
-const char *SET_GET_NUMBER_TESTS = "Test (NumberArray {set,get}Number methods): "; 
+  "Test (NumberArray<double> Parameterized constructor): ";
+const char *SET_GET_NUMBER_TESTS = "Test (NumberArray<double> {set,get}Number methods): "; 
 const char *STATISTICAL_TESTS = 
-  "Test (NumberArray {min,max,average}Number methods): ";
-const char *PRINT_TEST = "Test (NumberArray print method): ";
-const char *EDGE_CASE_TEST = "Test (NumberArray edge case tests): ";
-const char *COPY_CONSTRUCTOR_TEST = "Test (NumberArray copy constructor tests): ";
-const char *ASSIGNMENT_OPERATOR_TEST = "Test (NumberArray assignment operator tests): ";
-const char *DESTRUCT_LIFETIME_TEST = "Test (NumberArray destructor lifetime tests): ";
+  "Test (NumberArray<double> {min,max,average}Number methods): ";
+const char *PRINT_TEST = "Test (NumberArray<double> print method): ";
+const char *EDGE_CASE_TEST = "Test (NumberArray<double> edge case tests): ";
+const char *COPY_CONSTRUCTOR_TEST = "Test (NumberArray<double> copy constructor tests): ";
+const char *ASSIGNMENT_OPERATOR_TEST = "Test (NumberArray<double> assignment operator tests): ";
+const char *DESTRUCT_LIFETIME_TEST = "Test (NumberArray<double> destructor lifetime tests): ";
 
 // The test functions follow the testing documents specifications in order,
 // both internally, and in terms of their calling sequence in main().
 
-/// tests the default constructor of the NumberArray class
+/// tests the default constructor of the NumberArray<{double,int}> 
+/// template class instantiations
 void defaultConstructorTest(void);
 
-/// tests the parameterized constructor of the NumberArray class
+/// tests the parameterized constructor of NumberArray<{double, int}>
+/// template class intantiations 
 void paramConstructorTest(void);
 
-/// tests the set and get Number methods of the NumberArray class
+/// tests the set and get Number methods of the NumberArray<double> class
 void setGetNumberTests(void);
 
-/// tests the {min,max,average}Number methods of the NumberArray class
+/// tests the {min,max,average}Number methods of the NumberArray<double> class
 void statisticalTests(void);
 
-/// tests the print method of the NumberArray class
+/// tests the print method of the NumberArray<double> class
 void printTests(void);
 
-/// tests the edge case uses of the NumberArray class
+/// tests the edge case uses of the NumberArray<double> class
 void edgeCaseTests(void);
 
-/// tests the copy constructor of the NumberArray class
+/// tests the copy constructor of the NumberArray<double> class
 void copyConstructorTests(void);
 
-/// tests the assignment operator of the NumberArray class
+/// tests the assignment operator of the NumberArray<double> class
 void assignmenOpTests(void);
 
 /// tests that lifetimes are properly handled by the destructor.
@@ -76,23 +79,34 @@ int main(void)
 void defaultConstructorTest(void) 
 {
   cout << DEFAULT_CONSTRUCTOR_TEST;
-  NumberArray test {};
-  assert(test.size() == NumberArray::DEFAULT_SIZE);
 
-  for (int i {}; i < test.size(); ++i)
-    assert(test.getNumber(i) == 0.0);
+  // M6 test create NumberArray<{int,double}> and verify both compile and run
+  NumberArray<int> def_iarr {}; 
+  NumberArray<int> iarr { 15 };
+  NumberArray<double> def_darr {};
+  NumberArray<double> darr { 15 };
+
+  assert(def_darr.size() == NumberArray<double>::DEFAULT_SIZE);
+
+  for (int i {}; i < def_darr.size(); ++i)
+    assert(def_darr.getNumber(i) == 0.0);
 
   cout << '\n';
-  test.print();
+  def_darr.print();
   cout << TEST_PASS << endl;
 } 
 
 void paramConstructorTest(void)
 {
   cout << PARAM_CONSTRUCTOR_TEST;
+
   const size_t SET_SIZE { 10 };
-  NumberArray test { SET_SIZE };
+
+  NumberArray<double> test { SET_SIZE };
+  NumberArray<int> test2 { SET_SIZE };
+  
   assert(test.size() == SET_SIZE);
+  assert(test2.size() == SET_SIZE);
 
   for (int i {}; i < test.size(); ++i)
     assert(test.getNumber(i) == 0.0);
@@ -103,33 +117,50 @@ void paramConstructorTest(void)
 void setGetNumberTests(void) 
 {
   cout << SET_GET_NUMBER_TESTS;
-  const size_t SET_SIZE { 30 };
-  NumberArray tested { SET_SIZE };
+
+  NumberArray<int> def_iarr {}; 
+  NumberArray<double> def_darr {};
   
-  // valid index tests
-  tested.setNumber(SET_SIZE - 1, 10.0);          
-  tested.setNumber(SET_SIZE / 2, 10.0);
-  tested.setNumber(0, 10.0);
+  // check the sizes are the default size
+  assert(
+    (def_iarr.size() & def_darr.size()) == NumberArray<int>::DEFAULT_SIZE);
 
-  assert(tested.getNumber(SET_SIZE - 1) == 10.0);
-  assert(tested.getNumber(SET_SIZE / 2) == 10.0);
-  assert(tested.getNumber(0) == 10.0);
-  
-  // OOB index tests
-  tested.setNumber(-1, 19.0); 
-  tested.setNumber(tested.size(), 19.0);
+  // access valid indexes
+  try {
+    assert(def_iarr.getNumber(0) == 0);  
+    assert(def_darr.getNumber(0) == 0.0);
+  } catch (const out_of_range& err) {
+    cerr << err.what() << endl;
+    terminate();
+  }
 
-  assert(tested.getNumber(-1) == NumberArray::INVALID); 
-  assert(tested.getNumber(tested.size()) == NumberArray::INVALID);
+  // access invalid index, int=T
+  bool caught { false };  
+  try {
+    // should throw, out of range by one
+    def_iarr.getNumber(NumberArray<int>::DEFAULT_SIZE);    
+  } catch (const out_of_range& err) {
+    caught = true;
+  }
+  assert(caught);
 
-  cout << '\n' << "Invalid Number Default return = " << NumberArray::INVALID;
+  // access invalid index, double=T
+  caught = false;  
+  try {
+    // should throw, size_t implicit casted -1 wraps to max
+    def_darr.getNumber(-1);    
+  } catch (const out_of_range& err) {
+    caught = true;
+  }
+  assert(caught);
+
   cout << '\n' << TEST_PASS << endl;
 }
 
 void statisticalTests(void)
 {
   cout << STATISTICAL_TESTS;
-  NumberArray tested { 10 };
+  NumberArray<double> tested { 10 };
   double max, min, average;
 
   // using preset values
@@ -169,7 +200,7 @@ void statisticalTests(void)
 void printTests(void) 
 {
   cout << PRINT_TEST;
-  NumberArray test {};
+  NumberArray<double> test {};
   cout << '\n';
   test.print();
 
@@ -185,7 +216,7 @@ void printTests(void)
 void edgeCaseTests(void)
 {
   cout << EDGE_CASE_TEST;
-  NumberArray test { 1 };
+  NumberArray<double> test { 1 };
   assert(test.getNumber(0) == 0.0);
   test.setNumber(0, 10.0);
   assert(test.getNumber(0) == 10.0);
@@ -198,22 +229,32 @@ void edgeCaseTests(void)
   test.print();
 
   // make sure zero size arrays don't crash
-  NumberArray zero { 0 }; 
-  zero.setNumber(0, 1.0);
-  assert(zero.getNumber(0) == NumberArray::INVALID);
+  bool caught { false };
+  try 
+  {
+    NumberArray<double> zero { 0 }; 
+    zero.setNumber(0, 1.0);
+  }
+  catch (const out_of_range& err)
+  { 
+    caught = true;
+  }
+
+  assert(caught);
+  
 
   // larger array size
   size_t big_size { 1'000'000 };
-  NumberArray big { big_size };
+  NumberArray<double> big { big_size };
   assert(big.size() == big_size);
 
   {
-    NumberArray big2 { big };
+    NumberArray<double> big2 { big };
     {
       // copy constructor and assignment operator
       // copy constructor (big3 = big2...) 
       // assignment operator (...big2 = big)
-      NumberArray big3 = big2 = big;
+      NumberArray<double> big3 = big2 = big;
     }
   }
 
@@ -226,14 +267,14 @@ void copyConstructorTests(void)
   
   // create a new object
   size_t size { 20 };
-  NumberArray orig { 20 };
+  NumberArray<double> orig { size };
 
   // put some values in original object
   for (int i {}; i < size; ++i)
     orig.setNumber(i, i);
 
   // copy original object with copy constructor
-  NumberArray copied { orig };
+  NumberArray<double> copied { orig };
   assert(orig.size() == copied.size());
 
   // verify values were copied
@@ -257,8 +298,8 @@ void assignmenOpTests(void)
   
   // create two objs of the same size 
   size_t size { 25 };
-  NumberArray assigned { size };
-  NumberArray source { size };
+  NumberArray<double> assigned { size };
+  NumberArray<double> source { size };
 
   // give some values to obj1
   for (int i {}; i < size; ++i)
@@ -281,7 +322,7 @@ void assignmenOpTests(void)
 
   // size difference test
   size_t size_1 { 20 }, size_2 { 40 };
-  NumberArray obj1 { size_1 }, obj2 { size_2 };
+  NumberArray<double> obj1 { size_1 }, obj2 { size_2 };
 
   obj2.setNumber(0, 10.0);
   obj2.setNumber(size_2 - 1, 10.0);
@@ -310,10 +351,10 @@ void destructLifetimeTests(void)
   cout << DESTRUCT_LIFETIME_TEST << endl;
   // create objects inside a block scope
   {
-    NumberArray obj1, obj2;
+    NumberArray<double> obj1, obj2;
 
     // tests assignment chaining as well
-    obj1 = obj2 = NumberArray{};
+    obj1 = obj2 = NumberArray<double>{};
   }
 
   // should be three messages outputted
