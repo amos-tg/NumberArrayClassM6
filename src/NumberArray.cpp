@@ -15,7 +15,7 @@ NumberArray<T>::NumberArray(size_t size)
 }
 
 template<typename T>
-NumberArray<T>::NumberArray(const NumberArray& other)
+NumberArray<T>::NumberArray(const NumberArray<T>& other)
   // set size and alloc zeroed array
   : size_m(other.size_m), data_m(new T[other.size_m] {})
 {
@@ -24,7 +24,7 @@ NumberArray<T>::NumberArray(const NumberArray& other)
 }
 
 template<typename T>
-NumberArray<T>& NumberArray<T>::operator=(const NumberArray& other) 
+NumberArray<T>& NumberArray<T>::operator=(const NumberArray<T>& other) 
 {
   // self assignment check
   if (this == &other) 
@@ -53,7 +53,7 @@ template<typename T>
 void NumberArray<T>::setNumber(size_t index, T value) 
 {
   // index validity check
-  if (index >= size_m || index < 0) 
+  if (index >= size_m) 
     throw out_of_range(
       format("NumberArray::setNumber: Index: {}, Size: {}", index, size_m)); 
 
@@ -64,7 +64,7 @@ template<typename T>
 T NumberArray<T>::getNumber(size_t index) const 
 {
   // index validity check
-  if (index >= size_m || index < 0) 
+  if (index >= size_m) 
     throw out_of_range(
       format("NumberArray::getNumber: Index: {}, Size: {}", index, size_m)); 
   

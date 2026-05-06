@@ -5,10 +5,10 @@
 
 template<typename T>
 class NumberArray {
-  /// size of the array in terms of total number of double elements
+  /// size of the array in terms of total number of type T elements
   size_t size_m;
 
-  /// the dynamically allocated array of size size_m of doubles
+  /// the dynamically allocated array of size size_m of type T
   T *data_m;
 public:
   /// Default array size when the constructor is not passed a specific size.
@@ -28,17 +28,17 @@ public:
   /// copy assignment operator
   NumberArray& operator=(const NumberArray<T>& other);
 
-  /// Deallocates the dynamically allocated double array, and prints a message
+  /// Deallocates the dynamically allocated array, and prints a message
   /// which indicates that has been done.
   ~NumberArray();
 
-  /// returns the size of the array, the total number of double elements the
+  /// returns the size of the array, the total number of Type T elements the
   /// array has space for.
   inline size_t size() const
   { return size_m; }
 
   /// - size_t index : the index of the array which is assigned value.
-  /// - double value : the value which is assigned to the given index of the
+  /// - Type T value : the value which is assigned to the given index of the
   /// array.
   ///
   /// The index given must be valid relative to the total size of the array.
