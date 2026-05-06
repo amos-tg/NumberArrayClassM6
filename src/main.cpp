@@ -48,7 +48,7 @@ void edgeCaseTests(void);
 void copyConstructorTests(void);
 
 /// tests the assignment operator of the NumberArray<double> class
-void assignmenOpTests(void);
+void assignmentOpTests(void);
 
 /// tests that lifetimes are properly handled by the destructor.
 void destructLifetimeTests(void);
@@ -69,7 +69,7 @@ int main(void)
   cout << '\n';
   copyConstructorTests();
   cout << '\n';
-  assignmenOpTests();
+  assignmentOpTests();
   cout << '\n';
   destructLifetimeTests();
 
@@ -122,8 +122,8 @@ void setGetNumberTests(void)
   NumberArray<double> def_darr {};
   
   // check the sizes are the default size
-  assert(
-    (def_iarr.size() & def_darr.size()) == NumberArray<int>::DEFAULT_SIZE);
+  assert(def_iarr.size() == NumberArray<int>::DEFAULT_SIZE &&
+         def_darr.size() == NumberArray<int>::DEFAULT_SIZE);
 
   // access valid indexes
   try {
@@ -292,7 +292,7 @@ void copyConstructorTests(void)
   cout << TEST_PASS << endl;
 }
 
-void assignmenOpTests(void)
+void assignmentOpTests(void)
 {
   cout << ASSIGNMENT_OPERATOR_TEST;
   
